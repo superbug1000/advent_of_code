@@ -2,9 +2,9 @@
 #include "stdlib.h"
 
 typedef struct {
-    uint64_t *items;
-    uint64_t size;
-    uint64_t limit;
+    int *items;
+    int size;
+    int limit;
 } IntArray;
 
 void new_array(IntArray *array) {
@@ -16,7 +16,7 @@ void new_array(IntArray *array) {
 void add_to_array(IntArray *array, int value) {
     if (array->size == array->limit) {
         array->limit *= 2;
-        array->items = realloc(array->items, array->limit * sizeof(uint64_t*));
+        array->items = realloc(array->items, array->limit * sizeof(int*));
     }
 
     array->items[array->size++] = value;
@@ -35,7 +35,7 @@ void print_timers(IntArray *timers) {
     puts("\n");
 }
 
-int run_timers(IntArray *timers, int days, uint64_t toAdd) {
+int run_timers(IntArray *timers, int days, int toAdd) {
     if (days == 0) {
         return timers->size;
     }
@@ -45,9 +45,9 @@ int run_timers(IntArray *timers, int days, uint64_t toAdd) {
     }
 
     toAdd = 0;
-    uint64_t count = timers->size;
-    for (uint64_t i = 0; i < count; i++) {
-        uint64_t *value = &timers->items[i];
+    int count = timers->size;
+    for (int i = 0; i < count; i++) {
+        int *value = &timers->items[i];
         *value = *value - 1;
 
         if (*value == 0) {
@@ -76,9 +76,9 @@ int main() {
     }
     fclose(file);
 
-    int days = 256;
-    uint64_t count = run_timers(timers, days, 0);
-    printf("%llu fishes after %d days! \n", count, days);
+    int days = 80;
+    int count = run_timers(timers, days, 0);
+    printf("%d fishes after %d days! \n", count, days);
 
     free_array(timers);
     return 0;
