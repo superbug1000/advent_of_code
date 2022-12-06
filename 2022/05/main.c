@@ -77,7 +77,6 @@ void parse_crates(FILE *file, Stack *crates[]) {
     char line[128] = "";
     int count = 0;
     while (fgets(line, sizeof(line), file)) {
-        char items[3];
         int crate_index = 0;
 
         if (line[1] == '1') continue;
