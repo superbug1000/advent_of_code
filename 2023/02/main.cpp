@@ -20,7 +20,7 @@ std::vector<std::string> find_substrings(const std::string &str, std::string del
 	return result;
 }
 
-bool is_game_valid(const std::vector<std::string> &sets, const std::map<std::string, int>& color_limits)
+bool is_game_valid(const std::vector<std::string>& sets, const std::map<std::string, int>& color_limits)
 {
 	for (int i = 0; i < sets.size(); i++)
 	{
@@ -43,9 +43,38 @@ bool is_game_valid(const std::vector<std::string> &sets, const std::map<std::str
 	return true;
 }
 
+int calculate_game_power(const std::vector<std::string>& sets)
+{
+	std::map<std::string, int> color_min_count {
+		{"red", 0},
+		{"green", 0},
+		{"blue", 0}
+	};
+
+	for (int i = 0; i < sets.size(); i++)
+	{
+		std::string set = sets[i];
+		std::vector<std::string> cubes = find_substrings(set, ",");
+		for (int j = 0; j < cubes.size(); j++)
+		{
+			std::string cube = cubes[j];
+			size_t cube_delimiter_pos = cube.find(" ");
+			int value = std::stoi(cube.substr(0, cube_delimiter_pos));
+			std::string color = cube.substr(cube_delimiter_pos + 1);
+
+			if (color_min_count.at(color) < value) {
+				color_min_count[color] = value;
+			}
+		}
+	}
+
+	return color_min_count.at("red") * color_min_count.at("green") * color_min_count.at("blue");
+}
+
 int main()
 {
 	int ids_sum = 0;
+	int power_sum = 0;
 
 	const std::map<std::string, int> color_limits {
 		{"red", 12},
@@ -65,8 +94,11 @@ int main()
 		if (is_game_valid(sets, color_limits)) {
 			ids_sum += game_id;
 		}
+
+		power_sum += calculate_game_power(sets);
 	}
 
 	std::cout << ids_sum << std::endl;
+	std::cout << power_sum << std::endl;
 	return 0;
 }
